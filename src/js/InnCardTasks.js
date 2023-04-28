@@ -1,8 +1,15 @@
 export default class InnCardTesks {
   constructor(title) {
     this.title = title;
+    this.board = document.querySelector(".board-tasks");
+    this._activTask = undefined;
+    this.saveTasks = JSON.parse(localStorage.getItem(this.title.toLowerCase()))
+      ? JSON.parse(localStorage.getItem(this.title.toLowerCase()))
+      : undefined;
 
     this.onClick = this.onClick.bind(this);
+    this.onMouseover = this.onMouseover.bind(this);
+    this.onMouseout = this.onMouseout.bind(this);
   }
 
   static get markup() {
@@ -10,7 +17,6 @@ export default class InnCardTesks {
       <div class="card-tasks">
         <h2></h2>
         <ul class="tasks">
-          <li class="task preview">Welcome to Trolle!</li>
         </ul>
         <div class="add-card">
           <h3 class="another">+ Add another card</h3>
@@ -83,12 +89,23 @@ export default class InnCardTesks {
       InnCardTesks.closeDescriptionSelector
     );
 
-    this.cardTasks.addEventListener("click", this.onClick);
+    this.innTitle();
+
+    if (!this.tasks.querySelector(".preview") && this.title === "todo")
+      this.tasks.innerHTML = `<li class="task preview">Welcome to Trolle!</li>`;
+
+    if (this.saveTasks) this.tasks.innerHTML = this.saveTasks;
+
+    this.board.addEventListener("click", this.onClick);
+
+    this.board.addEventListener("mouseover", this.onMouseover);
+
+    this.board.addEventListener("mouseout", this.onMouseout);
   }
 
   onClick(e) {
     const target = e.target;
-    const activeAnother = [
+    const unActiveAnother = [
       ...document.querySelectorAll(InnCardTesks.anotherSelector),
     ].filter((el) => el.classList.contains("unvisible"));
     const activeAddButton = [
@@ -96,9 +113,10 @@ export default class InnCardTesks {
     ].filter((el) => !el.classList.contains("unvisible"));
 
     if (target == this.another && e.currentTarget !== activeAddButton) {
-      activeAnother.forEach((el) => el.classList.remove("unvisible"));
+      unActiveAnother.forEach((el) => el.classList.remove("unvisible"));
       activeAddButton.forEach((el) => el.classList.add("unvisible"));
       this.addButtonContainer.classList.remove("unvisible");
+      this.descriptionCard.value = "";
       this.another.classList.add("unvisible");
     }
 
@@ -111,6 +129,10 @@ export default class InnCardTesks {
     if (target == this.closeDescription) {
       this.addButtonContainer.classList.add("unvisible");
       this.another.classList.remove("unvisible");
+    }
+
+    if (target.classList.contains("close-task")) {
+      target.closest(".task").remove();
     }
   }
 
@@ -125,10 +147,6 @@ export default class InnCardTesks {
     this.cardTasks = [
       ...document.querySelectorAll(InnCardTesks.cardTasksSelector),
     ].filter((el) => el.classList.contains(titleList[0].toLowerCase()))[0];
-    console.log(this.cardTasks);
-    if (!this.cardTasks.classList.contains("todo")) {
-      this.cardTasks.querySelector(".preview").remove();
-    }
   }
 
   addTask() {
@@ -145,6 +163,27 @@ export default class InnCardTesks {
           .insertAdjacentElement("afterend", task);
       } else {
         this.tasks.insertAdjacentElement("afterbegin", task);
+      }
+    }
+  }
+
+  onMouseover(e) {
+    const closeTask = e.target.querySelector(".close-task");
+    if (
+      e.target.classList.contains("task") &&
+      !e.target.classList.contains("preview") &&
+      !e.target.classList.contains("board-tasks")
+    ) {
+      if (this._activTask) this._activTask.style.display = "none";
+      closeTask.style.display = "block";
+      this._activTask = closeTask;
+    }
+  }
+
+  onMouseout(e) {
+    if (!e.target.classList.contains("task")) {
+      if (this._activTask !== undefined) {
+        this._activTask.style.display = "none";
       }
     }
   }
