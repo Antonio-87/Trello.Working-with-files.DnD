@@ -40,12 +40,18 @@ h2 {
 
 .task {
     position: relative;
-    height: 50px;
+    /* height: 50px; */
     padding: 5px;
     margin-bottom: 5px;
     border-bottom: 1px solid gray;
     border-radius: 3px;
     background-color: white;
+    word-wrap: break-word;
+}
+
+p {
+    margin: 10px 16px 10px 0;
+    pointer-events: none;
 }
 
 .preview {
@@ -120,9 +126,18 @@ h2 {
     right: 5px;
     width: 16px;
     height: 16px;
-    /* pointer-events: none; */
 }
 
 .unvisible {
     display: none;
+}
+
+.dragged {
+    position: absolute;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: rgb(118, 101, 101);
+    list-style: none;
+    width: 304px;
+    pointer-events: none;
+    z-index: 999;
 }

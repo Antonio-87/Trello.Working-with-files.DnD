@@ -8,8 +8,8 @@ export default class InnCardTesks {
       : undefined;
 
     this.onClick = this.onClick.bind(this);
-    this.onMouseover = this.onMouseover.bind(this);
-    this.onMouseout = this.onMouseout.bind(this);
+    this.onMouseOver = this.onMouseOver.bind(this);
+    this.onMouseOut = this.onMouseOut.bind(this);
   }
 
   static get markup() {
@@ -94,13 +94,13 @@ export default class InnCardTesks {
     if (!this.tasks.querySelector(".preview") && this.title === "todo")
       this.tasks.innerHTML = `<li class="task preview">Welcome to Trolle!</li>`;
 
-    if (this.saveTasks) this.tasks.innerHTML = this.saveTasks;
+    // if (this.saveTasks) this.tasks.innerHTML = this.saveTasks;
 
     this.board.addEventListener("click", this.onClick);
 
-    this.board.addEventListener("mouseover", this.onMouseover);
+    this.board.addEventListener("mouseover", this.onMouseOver);
 
-    this.board.addEventListener("mouseout", this.onMouseout);
+    this.board.addEventListener("mouseout", this.onMouseOut);
   }
 
   onClick(e) {
@@ -154,7 +154,7 @@ export default class InnCardTesks {
       const task = document.createElement("li");
       task.classList.add("task");
       task.innerHTML = `
-          <span>${this.descriptionCard.value}</span>
+          <p>${this.descriptionCard.value}</p>
           <div class="close-task"></div>
         `;
       if (this.tasks.querySelector(".preview")) {
@@ -167,7 +167,7 @@ export default class InnCardTesks {
     }
   }
 
-  onMouseover(e) {
+  onMouseOver(e) {
     const closeTask = e.target.querySelector(".close-task");
     if (
       e.target.classList.contains("task") &&
@@ -180,7 +180,7 @@ export default class InnCardTesks {
     }
   }
 
-  onMouseout(e) {
+  onMouseOut(e) {
     if (!e.target.classList.contains("task")) {
       if (this._activTask !== undefined) {
         this._activTask.style.display = "none";
