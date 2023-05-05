@@ -40,7 +40,6 @@ h2 {
 
 .task {
     position: relative;
-    /* height: 50px; */
     padding: 5px;
     margin-bottom: 5px;
     border-bottom: 1px solid gray;
@@ -50,7 +49,7 @@ h2 {
 }
 
 p {
-    margin: 10px 16px 10px 0;
+    margin: 2px 16px 2px 0;
     pointer-events: none;
 }
 

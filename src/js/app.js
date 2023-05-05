@@ -8,6 +8,7 @@ let draggedEl = null;
 let shiftX;
 let shiftY;
 
+/**Отрисовываем карточки */
 document.addEventListener("DOMContentLoaded", () => {
   const cardsTodo = new InnCardTesks("todo");
   cardsTodo.bindToDOM();
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   cardDone.bindToDOM();
 });
 
+/**При перезагрузке записываем  в LocalStorage имеющиеся задачи по карточкам*/
 window.addEventListener("unload", () => {
   const cardTasks = [...document.querySelectorAll(".card-tasks")];
   for (let item of cardTasks) {
@@ -28,6 +30,7 @@ window.addEventListener("unload", () => {
   }
 });
 
+/**Опеределяем переносимую карточку, рассчитываем координаты точки взятия */
 document.documentElement.addEventListener("mousedown", (e) => {
   if (
     e.target.classList.contains("task") &&
@@ -45,6 +48,7 @@ document.documentElement.addEventListener("mousedown", (e) => {
   }
 });
 
+/**Закрепляем координаты за переносимой карточкой */
 function onMouseMove(e) {
   e.preventDefault();
   if (!draggedEl) {
@@ -54,6 +58,7 @@ function onMouseMove(e) {
   draggedEl.style.top = `${e.pageY - shiftY}px`;
 }
 
+/**Вставляем в выделенное подкарточку место*/
 function onMouseUp(e) {
   if (!draggedEl) {
     return;
@@ -85,27 +90,52 @@ function onMouseUp(e) {
   document.documentElement.removeEventListener("mouseup", onMouseUp);
 }
 
+/**Выделем место при наведении по размерам переносимой карточки */
 document.documentElement.addEventListener("mouseover", (e) => {
-  if (
-    draggedEl &&
-    draggedEl != e.target &&
-    e.target.classList.contains("task") &&
-    !e.target.classList.contains("preview")
-  ) {
-    const plugElement = document.createElement("li");
-    plugElement.classList.add("drop");
+  const plugElement = document.createElement("li");
+  plugElement.classList.add("drop");
+  if (draggedEl && draggedEl != e.target) {
     plugElement.style.height = draggedEl.offsetHeight + "px";
     const { top, bottom } = draggedEl.getBoundingClientRect();
     const parentEl = document.elementFromPoint(e.clientX, e.clientY);
-    const cardTask = parentEl.closest(".card-tasks");
-    const ul = cardTask.querySelector("ul");
-    if (document.querySelector(".drop"))
-      document.querySelector(".drop").remove();
-    if (top - e.clientY < bottom - e.clientY) {
-      ul.insertBefore(plugElement, parentEl);
+    if (
+      e.target.classList.contains("task") &&
+      !e.target.classList.contains("preview")
+    ) {
+      if (document.querySelector(".drop"))
+        document.querySelector(".drop").remove();
+      const cardTask = parentEl.closest(".card-tasks");
+      const ul = cardTask.querySelector("ul");
+
+      if (top - e.clientY < bottom - e.clientY) {
+        ul.insertBefore(plugElement, parentEl);
+      }
+      if (top - e.clientY > bottom - e.clientY) {
+        ul.insertBefore(plugElement, parentEl.nextElementSibling);
+      }
     }
-    if (top - e.clientY > bottom - e.clientY) {
-      ul.insertBefore(plugElement, parentEl.nextElementSibling);
+
+    if (
+      (e.target.tagName === "h2" || e.target.classList.contains("another")) &&
+      e.target.closest(".card-tasks")
+    ) {
+      const cardTask = parentEl.closest(".card-tasks");
+      const ul = cardTask.querySelector("ul");
+      if (!ul.querySelector("task") && !ul.querySelector(".preview")) {
+        if (document.querySelector(".drop")) {
+          document.querySelector(".drop").remove();
+        }
+        ul.insertAdjacentElement("afterbegin", plugElement);
+      }
+      if (ul.querySelector(".preview")) {
+        if (document.querySelector(".drop")) {
+          document.querySelector(".drop").remove();
+        }
+        ul.querySelector(".preview").insertAdjacentElement(
+          "afterend",
+          plugElement
+        );
+      }
     }
   }
 });

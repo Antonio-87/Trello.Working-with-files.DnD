@@ -94,7 +94,7 @@ export default class InnCardTesks {
     if (!this.tasks.querySelector(".preview") && this.title === "todo")
       this.tasks.innerHTML = `<li class="task preview">Welcome to Trolle!</li>`;
 
-    // if (this.saveTasks) this.tasks.innerHTML = this.saveTasks;
+    if (this.saveTasks) this.tasks.innerHTML = this.saveTasks;
 
     this.board.addEventListener("click", this.onClick);
 
