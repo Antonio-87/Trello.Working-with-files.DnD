@@ -1,4 +1,4 @@
-import Card from "./card";
+import Card from "./Card";
 
 // Класс для управления всей логикой. Слушает интерфейс и реагирует на него
 export default class Controller {
