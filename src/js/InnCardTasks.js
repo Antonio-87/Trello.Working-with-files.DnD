@@ -85,7 +85,7 @@ export default class InnCardTesks {
     /**Прописывем заголовки */
     this.innTitle();
     /**Подключаем хранение состояния*/
-//     if (this.saveTasks) this.tasks.innerHTML = this.saveTasks;
+    if (this.saveTasks) this.tasks.innerHTML = this.saveTasks;
     /**Подкючаем обработчик событий Click */
     this.board.addEventListener("click", this.onClick);
   }
