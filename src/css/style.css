@@ -53,10 +53,6 @@ p {
     pointer-events: none;
 }
 
-.preview {
-    height: 20px;
-}
-
 .description-card {
     min-width: 97%;
     max-width: 97%;
@@ -131,7 +127,7 @@ p {
     display: none;
 }
 
-.dragged {
+/* .dragged {
     position: absolute;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     color: rgb(118, 101, 101);
@@ -139,4 +135,4 @@ p {
     width: 304px;
     pointer-events: none;
     z-index: 999;
-}
+} */

@@ -6,10 +6,6 @@ export default class InnCardTesks {
     this.saveTasks = JSON.parse(localStorage.getItem(this.title.toLowerCase()))
       ? JSON.parse(localStorage.getItem(this.title.toLowerCase()))
       : undefined;
-
-    this.onClick = this.onClick.bind(this);
-    this.onMouseOver = this.onMouseOver.bind(this);
-    this.onMouseOut = this.onMouseOut.bind(this);
   }
 
   static get markup() {
@@ -62,9 +58,7 @@ export default class InnCardTesks {
   }
 
   bindToDOM() {
-    const boardTasks = document.querySelector(".board-tasks");
-
-    boardTasks.insertAdjacentHTML("beforeend", InnCardTesks.markup);
+    this.board.insertAdjacentHTML("beforeend", InnCardTesks.markup);
 
     this.cardTasks = [
       ...document.querySelectorAll(InnCardTesks.cardTasksSelector),
@@ -88,22 +82,15 @@ export default class InnCardTesks {
     this.closeDescription = this.cardTasks.querySelector(
       InnCardTesks.closeDescriptionSelector
     );
-
+    /**Прописывем заголовки */
     this.innTitle();
-
-    if (!this.tasks.querySelector(".preview") && this.title === "todo")
-      this.tasks.innerHTML = `<li class="task preview">Welcome to Trolle!</li>`;
-
+    /**Подключаем хранение состояния*/
     if (this.saveTasks) this.tasks.innerHTML = this.saveTasks;
-
+    /**Подкючаем обработчик событий Click */
     this.board.addEventListener("click", this.onClick);
-
-    this.board.addEventListener("mouseover", this.onMouseOver);
-
-    this.board.addEventListener("mouseout", this.onMouseOut);
   }
 
-  onClick(e) {
+  onClick = (e) => {
     const target = e.target;
     const unActiveAnother = [
       ...document.querySelectorAll(InnCardTesks.anotherSelector),
@@ -134,7 +121,7 @@ export default class InnCardTesks {
     if (target.classList.contains("close-task")) {
       target.closest(".task").remove();
     }
-  }
+  };
 
   innTitle() {
     const titleList = this.title.split(" ");
@@ -157,34 +144,7 @@ export default class InnCardTesks {
           <p>${this.descriptionCard.value}</p>
           <div class="close-task"></div>
         `;
-      if (this.tasks.querySelector(".preview")) {
-        this.tasks
-          .querySelector(".preview")
-          .insertAdjacentElement("afterend", task);
-      } else {
-        this.tasks.insertAdjacentElement("afterbegin", task);
-      }
-    }
-  }
-
-  onMouseOver(e) {
-    const closeTask = e.target.querySelector(".close-task");
-    if (
-      e.target.classList.contains("task") &&
-      !e.target.classList.contains("preview") &&
-      !e.target.classList.contains("board-tasks")
-    ) {
-      if (this._activTask) this._activTask.style.display = "none";
-      closeTask.style.display = "block";
-      this._activTask = closeTask;
-    }
-  }
-
-  onMouseOut(e) {
-    if (!e.target.classList.contains("task")) {
-      if (this._activTask !== undefined) {
-        this._activTask.style.display = "none";
-      }
+      this.tasks.insertAdjacentElement("beforeend", task);
     }
   }
 }
